@@ -1,0 +1,7 @@
+const helloWorld = () => {
+    for( i = 0; i <= 10; i++) {
+        console.log("Hello World", i)
+    }
+}
+
+helloWorld()
