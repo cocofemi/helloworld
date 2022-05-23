@@ -18,6 +18,14 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
 
+  destroy_environments: 
+    steps:
+      -run :
+        name: Destroy environment
+        when: on_fail
+        command: |
+            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7}
+
   create-infrastructure: 
     docker:
       - image: amazon/aws-cli
@@ -31,6 +39,14 @@ jobs:
               --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
 
+  smoke_test: 
+    docker: 
+      - image: alpine:latest
+    steps: 
+      - run: 
+          name: Test Job
+          command: return 1
+      - destroy_environments
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
